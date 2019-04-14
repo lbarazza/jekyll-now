@@ -4,12 +4,13 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+I'm just a normal guy passionate about AI and physics. In this website I'll share some of the things I learn about these topics, and possibly something else too if I feel like it. :)
 
 ### More Information
 
-A place to include any other types of information that you'd like to include about yourself.
+I'm 17 and I live in a little town in northern Italy. I've always been very passionate about Artificial Intelligence and physics. My favorite musical genres are indie rock and alternative rock (in particular, I love R.E.M.). I also suck at cooking.
+
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+[leonardo.barazza@gmail.com](mailto:leonardo.barazza@gmail.com)
