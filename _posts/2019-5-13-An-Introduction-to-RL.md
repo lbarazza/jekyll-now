@@ -1,6 +1,6 @@
 ---
 layout: post
-title: An Introduction to Reinforcement Learning!
+title: An Introduction to Reinforcement Learning
 ---
 
 
