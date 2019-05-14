@@ -17,7 +17,7 @@ For example, in a video game you could think of the reward as being the score af
 In such a framework, it makes sense to assume that an agent's goal would be to maximize the future reward, that is the sum of all the rewards that will come next.
 
 The Reward Hypothesis is the hypothesis that every goal or purpose can be described as the maximization of a single scalar, the future reward.
-read more about it here: http://incompleteideas.net/rlai.cs.ualberta.ca/RLAI/rewardhypothesis.html
+read more about it [here.](http://incompleteideas.net/rlai.cs.ualberta.ca/RLAI/rewardhypothesis.html)
 
 What exactly is reward?
 Above we defined the future reward as the sum of all the rewards that come next. This is called undiscounted future reward and in formula this would be:
@@ -53,7 +53,7 @@ Where, the only thing different from the last equation is that R (the future rew
 Now that we have the state-value function, we can define the action-value function. This latter function (often denoted with q) is very similar to the state-value function, but, instead of telling you the expected return of following a certain policy starting from a certain state, it tells you the expected return of starting at a certain state s and taking an action a (which doesn't have to be the one the policy would choose) and then following the policy ever after. The advantage of defining this function is that if we manage to "find" it, we can then improve our current policy by constantly choosing the action that maximizes the q-function.
 
 ### Model-Based Methods
-#### Dynamic Programming
+##### Dynamic Programming
 So far we only described some theoretical pre-requisites, but we never really described how to solve the problem we set for ourselves, that is find a policy that maximizes the expected future reward. Here I describe how to do just this.
 We will start off with an assumption that simplifies the problem and then we will discuss other methods that don't require us to make this assumption. The assumption is that we have complete knowledge of the MDP, that is we know with what probability an action will yield a certain state and we also know the reward that we would get from such transition (algorithms that work with this assumption are called model-based methods). 
 If we have this knowledge we can then find the optimal policy with a method called Dynamic Programming.
@@ -70,7 +70,7 @@ This method only tells us the v function corresponding to the current policy, wh
 
 ### Model-Free Methods
 
-#### Monte Carlo Methods
+##### Monte Carlo Methods
 In the above section we made the assumption that we know everything about how our model behaves, but this is often not the case so we need to come up with something else for all the times where this assumption is not feasible.
 One way to do this is to use a genre of methods called Monte Carlo Methods. Before our objective was to find the state-value function as we knew that if we managed to find that, we could then derive the q-function and then, finally, the policy. In this case, though, we are generally not able to get the q-function from the v-function as we don't know the details about the MDP (such as the transition rewards and probabilities) which we needed in the formula we used before. One way to get around this is to directly learn the q-function, without passing through the state-values.
 To do this we just run our agent in the environment and register every state and reward. At the end of the nth episode we then calculate the future reward (discounted or undiscounted) for every state-action pair visited (that we recorded) and average it over the number of times we visited that state. This will give us an estimate of the true action-value for that state.
@@ -93,7 +93,7 @@ If ε (epsilon) is the exploration rate (the probability that the agent takes a 
 
  [two formulas for GLIE]
 
-#### Temporal Difference Methods
+##### Temporal Difference Methods
 The MC methods we discussed above have a few problems: they don't work for continuous tasks as MC methods need to wait for the end of the episode to update the Q-table (which also makes them very inefficient).
 That's were Temporal Difference (or TD) methods come in. TD methods are able to update the Q-table at every time step in an episode. To do this they, again, make use of the Bellman equation, making use of their current predictions to approximate the expected future reward of a state.
 
@@ -111,16 +111,16 @@ Q-learning (or Sarsamax) is another variation of Sarsa where the only difference
 
 This doesn't look like much, but it actually has important consequences. In fact, this moves the policy improvement off-policy, which means that it directly improves the policy with the optimal policy in mind.
 
-You can find an implementation of these TD methods on my github page here.
+You can find an implementation of three TD methods on my github page [here](https://github.com/lbarazza/Taxi-v2).
 
 ### How to Deal with Continuous State Spaces
 So far all we did to represent the q-function in our code was to use a table of data. This, though, seems to be a problem when we start to explore continuous state-spaces as we would need an infinite amount of entries in our Q-table to represent the q-function completely.
 There are generally two methods to deal with this problem: state-space discretization and function approximation.
 
-#### State-Space Discretization
-The most trivial way to deal with the problem is to discretize the state-space. This can be achieved by creating a grid on the state-space and let each point be represented by the tile of the grid it falls into. There is also a more advanced way of discretizing the state-space which makes use of multiple grids overlapping one another. You can find an implementation of this approach called Tile Coding on my Github here.
+##### State-Space Discretization
+The most trivial way to deal with the problem is to discretize the state-space. This can be achieved by creating a grid on the state-space and let each point be represented by the tile of the grid it falls into. There is also a more advanced way of discretizing the state-space which makes use of multiple grids overlapping one another. You can find an implementation of this approach called Tile Coding on my Github [here](https://github.com/lbarazza/Tile-Coding).
 
-#### Function Approximation
+##### Function Approximation
 Another approach to the problem of continuous state spaces is to try to find a function which directly approximates the q-function. We can do this by defining a parametrized function q(s, a, W) which adjusts the parameter W to  try to find an approximation of q. As you may recognize this is nothing more than a neural network and it's right here where deep reinforcement learning comes in.
 
 ### Conclusion
