@@ -22,7 +22,7 @@ read more about it [here.](http://incompleteideas.net/rlai.cs.ualberta.ca/RLAI/r
 What exactly is reward?
 Above we defined the future reward as the sum of all the rewards that come next. This is called undiscounted future reward and in formula this would be:
 
-<img src="{{ site.baseurl }}/images/Intro-to-RL-images/undicounted_future_reward.png" alt="Formula for undiscounted future reward" style="height: 30px;"/>
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/undicounted_future_reward.png" alt="Formula for undiscounted future reward" style="height: 100px;"/>
 
 This implementation works well as long as we are dealing with an episodic task. In fact, if the task was not episodic then it would go on forever and the future reward could potentially diverge to infinity as well, which would prevent us from being able to maximize it.
 In the cases where we are dealing with a continuous task, we then have to come up with something else. The solution is to just slightly change the above formula so that the more a reward is in the future, the more it gets "discounted", so that it will eventually converge to a finite value (this variation of the formula is called discounted future reward). We can achieve this by adding a constant gamma γ ∈ [0, 1] which we raise to the nth power where n represents the number of time steps in the future.
@@ -35,12 +35,8 @@ In the case in which γ = 1, we get back the undiscounted formula.
 ### Policies and Value Functions
 Now that the general framework has been defined, we can start thinking about everything in more detail.
 For example, we said that the agent takes an action based on the state that it observes, but how exactly does it do that? The answer is that it follows a policy. A policy is a function that maps a certain state to the probability of taking each action.
-
-   [policy definition formula]
-
 But how do we find this policy? It turns out that it is useful to define two new functions first, the state-value function and the action-value function. The state-value function tells you the expected return that the agent would get if it started at the state s and followed the policy π for all future time steps. Formally,
 
-https://wikimedia.org/api/rest_v1/media/math/render/svg/cdc6b4354d612c08f5009fe29432d6779036343b
 <img src="{{ site.baseurl }}/images/Intro-to-RL-images/bellman_expectation_equation.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 This function also has a particularly useful property which is summarized by the Bellman Expectation Equation
