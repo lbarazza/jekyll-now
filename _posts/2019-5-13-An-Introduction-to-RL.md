@@ -45,7 +45,7 @@ This function also has the particularly useful property that it can be defined r
 
 Where, the only thing different from the last equation is that G (the future reward) is expressed in its expanded form. If we then expand the expectation we get,
 
-<img src="{{ site.baseurl }}/images/Intro-to-RL-images/bellman_expectation_equation_expanded_expectation.png" alt="Formula for discounted future reward" style="height: 100px;"/>
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/bellman_expectation_expanded_expectation.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 Now that we have the state-value function, we can define the action-value function. This latter function (often denoted with q) is very similar to the state-value function, but, instead of telling you the expected return of following a certain policy starting from a certain state, it tells you the expected return of starting at a certain state s and taking an action a (which doesn't have to be the one the policy would choose) and then following the policy ever after. The advantage of defining this function is that if we manage to "find" it, we can then improve our current policy by constantly choosing the action that maximizes the q-function.
 
@@ -70,44 +70,44 @@ This method only tells us the v function corresponding to the current policy, wh
 ##### Monte Carlo Methods
 In the above section we made the assumption that we know everything about how our model behaves, but this is often not the case so we need to come up with something else for all the times where this assumption is not feasible.
 One way to do this is to use a genre of methods called Monte Carlo Methods. Earlier, our objective was to find the state-value function as we knew that if we managed to find that, we could then derive the q-function and then, finally, the policy. In this case, though, we are generally not able to get the q-function from the v-function as we don't know the details about the MDP (such as the transition rewards and probabilities) which we needed in the formula we used before. One way to get around this is to directly learn the q-function, without passing through the state-values.
-To do this we just run our agent in the environment and register every state, action and reward. At the end of the nth episode we then calculate the future rewards (discounted or undiscounted) for every state-action pair at every episode visited and average them over the number of times we visited that state and performed that action. This will give us an estimate of the true action-value for that state.
+To do this we just run our agent in the environment and register every state, action and reward. At the end of the nth episode we then calculate the future rewards (discounted or undiscounted) for every state-action pair at every episode visited and average them over the number of times we visited that state and performed that action. We then store this information in a table usually referred to as Q-table, in which the rows are the different states and the columns are the different actions. This will give us an estimate of the true action-value for that state.
 
 Now we run into two different possibilities, either to consider every single visit to a state-action pair in one episode or to just consider the first one. In the first case we have the so called First-Visit MC Method and in the latter we have the Every-Visit MC Method, but we won't cover that right now.
 
-Our MC method works and doesn't need knowledge of the model, but it still has many limitations. One of which is that it has to run through a number of episodes before being able to update the Q-table, which is very inefficient. One way to do this is to use a running average (Incremental Mean Method),
+Our MC method works and doesn't need knowledge of the model, but it still has many limitations. One of which is that it has to run through a number of episodes before being able to update the Q-table, which is very inefficient. One way to solve this is to constantly update the Q-table with less accurate, but more frequent predictions for the q-function. This is done with a running average (Incremental Mean Method),
 
 <img src="{{ site.baseurl }}/images/Intro-to-RL-images/incremental_mean_MC.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
-but this means that the latest episodes will have less and less weight as the number of total episodes increases. This isn't the best, though, because the latest episodes are the ones that have been performed with a better policy and are the ones that should have more weight. To overcome this we can use the constant-alpha variation of the above formula,
+This also means that the latest episodes will have less and less weight as the number of total episodes increases. This isn't the best, though, because the latest episodes are the ones that have been performed with a better policy and are the ones that should have more weight. To overcome this we can use the constant-alpha variation of the above formula,
 
 <img src="{{ site.baseurl }}/images/Intro-to-RL-images/constant-alpha_MC.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
-where, instead of simply averaging over all values, we take an exponential moving average, to give more weight to the latest episodes. α (alpha) ∈ (0, 1] is the learning rate of the function, the bigger α the faster the agent will learn, but if α is too big, then the agent we would keep overshooting our approximation for the q values and the agent would never learn.
+where, instead of simply averaging over all values, we take an exponential moving average, to give more weight to the latest episodes. Where α (alpha) ∈ (0, 1] is the learning rate of the function. The bigger α the faster the agent will learn, but if α is too big, then the agent would keep overshooting our approximation for the q values and the agent would never learn.
 
 ##### GLIE
-These two methods as they have been described above won't work. To understand why, I need to introduce the problem of exploration vs. exploitation. This simply says that if we always choose the action that maximizes the q-function we might get stuck in a sub-optimal policy. This is because the agent would never be willing to try new actions that on paper have worse value than the current "optimal" (exploitation), but that in reality are better and are only badly represented in the Q-table because they have been tested out poorly. On the other hand, if we allow our agent to choose randomly too much to avoid the problem of being stuck in a sub-optimal policy (exploration), it would also never be able to perform well as, even though it knows what action would be best, it still will often perform another because of it having to choose random actions to explore.
+These two methods as they have been described above won't work. To understand why, I need to introduce the problem of exploration vs. exploitation. This simply says that if we always choose the action that maximizes the q-function we might get stuck in a sub-optimal policy. This is because the agent would never be willing to try new actions (exploitation) that on paper have worse value than the current "optimal", but that in reality might be better and might only be badly represented in the Q-table because they have been tested out poorly. On the other hand, if we allow our agent to choose randomly too much (exploration) to avoid the problem of being stuck in a sub-optimal policy, it would also never be able to perform well as, even though it knows what action would be best, it still will often perform another one because of it having to choose random actions to explore.
 Finding a good balance between exploration and exploitation is still a hot topic of study, but for simplicity, it can be summarized with GLIE. GLIE stands for Greedy in the Limit with Infinite Exploration.
-If ε (epsilon) is the exploration rate (the probability that the agent takes a random action to explore), then GLIE says that ε should decrease with time, eventually converging to zero as the number of episodes goes towards infinity. This way the agent will always explore, but, in the limit, it will converge towards a greedy policy (as ε -> 0).
+If ε (epsilon) is the exploration rate (the probability that the agent takes a random action to explore), then GLIE says that ε should decrease with time, eventually converging to zero as the number of episodes goes towards infinity. This way the policy will always explore, but, in the limit, it will converge towards a greedy policy (a policy that only exploits).
 
 ##### Temporal Difference Methods
-The MC methods we discussed above have a few problems: they don't work for continuous tasks as MC methods need to wait for the end of the episode to update the Q-table (which also makes them very inefficient).
-That's were Temporal Difference (or TD) methods come in. TD methods are able to update the Q-table at every time step in an episode. To do this they, again, make use of the Bellman equation, making use of their current predictions to approximate the expected future reward of a state.
+The MC methods we discussed above have a few problems: they don't work for continuous tasks. This is because MC methods need to wait for the end of the episode to update the Q-table (which also makes them very inefficient).
+That's were Temporal Difference (or TD) methods come in. TD methods are able to update the Q-table at every time step in an episode. To do this they also make use of the Bellman equation, but, this time, making use of their current predictions for the Q-table to update itself.
 
-There is a variety of TD methods such as Sarsa, Sarsamax (or q-learning), and Expected Sarsa. The simplest, Sarsa, takes an action, observes the state and the reward, then it chooses a new action based on the new state. It then uses the current estimate in the Q-table for the new action-value pair and observed reward to update the Q-table for the original action-value pair.
+There is a variety of TD methods such as Sarsa, Expected Sarsa, and Sarsamax (or q-learning). The simplest, Sarsa, takes an action, observes the state and the reward, then it chooses a new action based on the new state. It then uses the observed reward and the current estimate in the Q-table for the new action-value pair to update the Q-table for the original action-value.
  
 <img src="{{ site.baseurl }}/images/Intro-to-RL-images/sarsa.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
-Expected Sarsa is an improvement of Sarsa which, instead of using the value of the action the policy would choose after observing the results of the first action, it makes a weighted average of all the action-values from that observation (the expected future reward of taking action a at state s).
+Expected Sarsa is an improvement of Sarsa which, instead of using the value of the action the policy would choose after observing the results of the first action, it makes a weighted average of all the action-values at that state, that is it calulates the expected future reward of taking action a at state s).
 
 <img src="{{ site.baseurl }}/images/Intro-to-RL-images/expected_sarsa.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
-Q-learning (or Sarsamax) is another variation of Sarsa where the only difference is that we don't consider the action-value of the next action the policy would choose, but, instead, the action that maximizes the future reward of the policy at that state. In other words, we are choosing our action based on a greedy policy.
+Q-learning (or Sarsamax) is another variation of Sarsa where the only difference is that we don't consider the action-value of the next action the policy would choose, but, instead, the action-value of the action that maximizes the future reward of the policy at that state. In other words, we are choosing our action-value based on a greedy policy.
 
 <img src="{{ site.baseurl }}/images/Intro-to-RL-images/sarsa_max.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 This doesn't look like much, but it actually has important consequences. In fact, this moves the policy improvement off-policy, which means that it directly improves the policy with the optimal policy in mind.
 
-You can find an implementation of three TD methods on my github page [here](https://github.com/lbarazza/Taxi-v2).
+You can find an implementation of the three TD methods on my github page [here](https://github.com/lbarazza/Taxi-v2).
 
 ### How to Deal with Continuous State Spaces
 So far all we did to represent the q-function in our code was to use a table of data. This, though, seems to be a problem when we start to explore continuous state-spaces as we would need an infinite amount of entries in our Q-table to represent the q-function completely.
@@ -117,7 +117,7 @@ There are generally two methods to deal with this problem: state-space discretiz
 The most trivial way to deal with the problem is to discretize the state-space. This can be achieved by creating a grid on the state-space and let each point be represented by the tile of the grid it falls into. There is also a more advanced way of discretizing the state-space which makes use of multiple grids overlapping one another. You can find an implementation of this approach called Tile Coding on my Github [here](https://github.com/lbarazza/Tile-Coding).
 
 ##### Function Approximation
-Another approach to the problem of continuous state spaces is to try to find a function which directly approximates the q-function. We can do this by defining a parametrized function q(s, a, W) which adjusts the parameter W to  try to find an approximation of q. As you may recognize this is nothing more than a neural network and it's right here where deep reinforcement learning comes in.
+Another approach to the problem of continuous state spaces is to try to find a function which directly approximates the q-function. We can do this by defining a parametrized function q(s, a, W) which adjusts the parameter W to  try to find an approximation of q. As you may guess, this is nothing more than a neural network, and here's where deep reinforcement learning comes in.
 
 ### Conclusion
 After reading this post, you should have a general idea of the main concepts in reinforcement learning which should allow you to better understand the foundations of the very exciting field of deep reinforcement learning which is changing the world with algorithms such as AlphaGo Zero.
