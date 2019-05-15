@@ -41,14 +41,15 @@ For example, we said that the agent takes an action based on the state that it o
 But how do we find this policy? It turns out that it is useful to define two new functions first, the state-value function and the action-value function. The state-value function tells you the expected return that the agent would get if it started at the state s and followed the policy π for all future time steps. Formally,
 
 https://wikimedia.org/api/rest_v1/media/math/render/svg/cdc6b4354d612c08f5009fe29432d6779036343b
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/bellman_expectation_equation.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 This function also has a particularly useful property which is summarized by the Bellman Expectation Equation
 
-  [bellman expectation equation]
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/bellman_expectation_equation_expanded.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 Where, the only thing different from the last equation is that R (the future reward) is expressed in its expanded form. If we then expand the expectation we get,
 
-  [bellman expectation equation expanded form]
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/bellman_expectation_equation_expanded_expectation.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 Now that we have the state-value function, we can define the action-value function. This latter function (often denoted with q) is very similar to the state-value function, but, instead of telling you the expected return of following a certain policy starting from a certain state, it tells you the expected return of starting at a certain state s and taking an action a (which doesn't have to be the one the policy would choose) and then following the policy ever after. The advantage of defining this function is that if we manage to "find" it, we can then improve our current policy by constantly choosing the action that maximizes the q-function.
 
@@ -63,7 +64,7 @@ As showed earlier, having the q-function allows us to easily find the best polic
 
 If we have complete knowledge of he MDP, we can always solve the system of linear equations, but this is usually practically inefficient as the number of states is often very large. To avoid this we can take a slightly different approach called iterative policy evaluation. This consists of initializing each state with a certain value and then looping through each state and assigning to each a new value that you get from the Bellman equation,
 
- [bellman update equation for iterative policy evalutation]
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/policy_evaluation.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 This way, our approximation for the function will keep on changing until it reaches an equilibrium point where it doesn't change that much anymore. At that point, it has sufficiently approximated the state-value function so we exit the loop. Of course this method will hardly ever give us an exact representation of v, but we can get as good of an approximation as we want by stopping the approximation whenever the change in v is smaller than a hyperparameter we set θ (theta).
 This method only tells us the v function corresponding to the current policy, when what we really want is the v function for the optimal policy. But now that we have the v function we can derive the q-function as described above and then get a new improved policy from there. At this point we evaluate the v function for the new policy and then, again, derive the q-function and get an even better policy and so on. This whole process is called policy iteration and is composed of policy evaluation (finding the current v-function) and policy improvement (getting the new improved policy). We will come across policy iteration many times in RL.
@@ -78,11 +79,11 @@ Now we run into two different possibilities, either to consider every single vis
 
 This approach works and doesn't need knowledge of the model, but it still has many limitations. One of which is that it has to run through a number of episodes before being able to update the Q-table, which is very inefficient. One way to do this is to use a running average (Incremental Mean Method),
 
-  [running average formula] 
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/incremental_mean_MC.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 but this means that the latest episodes will have less and less weight as the number of total episodes increases. This isn't the best, though, because the latest episodes are the ones that have been performed with a better policy and are the ones that should have more weight. To overcome this we can use the constant-alpha variation of the above formula,
 
-[constant-alpha formula]
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/constant-alpha_MC.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 where, instead of simply averaging over all values, we take an exponential moving average, to give more weight to the latest episodes. α (alpha) ∈ (0, 1] is the learning rate of the function, the bigger α the faster the agent will learn, but if α is too big, then the agent we would keep overshooting our approximation for the q values and the agent would never learn.
 
@@ -91,23 +92,21 @@ These two methods as they have been described above won't work. To understand wh
 Finding a good balance between exploration and exploitation is still a hot topic of study, but for simplicity, it can be summarized with GLIE. GLIE stands for Greedy in the Limit with Infinite Exploration.
 If ε (epsilon) is the exploration rate (the probability that the agent takes a random action to explore), then GLIE says that ε should decrease with time, eventually converging to zero as the number of episodes goes towards infinity. This way the agent will always explore, but, in the limit, it will converge towards a greedy policy (as ε -> 0).
 
- [two formulas for GLIE]
-
 ##### Temporal Difference Methods
 The MC methods we discussed above have a few problems: they don't work for continuous tasks as MC methods need to wait for the end of the episode to update the Q-table (which also makes them very inefficient).
 That's were Temporal Difference (or TD) methods come in. TD methods are able to update the Q-table at every time step in an episode. To do this they, again, make use of the Bellman equation, making use of their current predictions to approximate the expected future reward of a state.
 
 There is a variety of TD methods such as Sarsa, Sarsamax (or q-learning), and Expected Sarsa. The simplest, Sarsa, takes an action, observes the state and the reward, then it chooses a new action based on the new state. It then uses the current estimate in the Q-table for the new action-value pair and observed reward to update the Q-table for the original action-value pair.
  
- [bellman equation for sarsa]
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/sarsa.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 Expected Sarsa is an improvement of Sarsa which, instead of using the value of the action the policy would choose after observing the results of the first action, it makes a weighted average of all the action-values from that observation (the expected future reward of taking action a at state s).
 
- [bellman equation for expected sarsa]
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/expected_sarsa.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 Q-learning (or Sarsamax) is another variation of Sarsa where the only difference is that we don't consider the action-value of the next action the policy would choose, but, instead, the action that maximizes the future reward of the policy at that state. In other words, we are choosing our action based on a greedy policy.
 
- [bellman equation for q-learning]
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/sarsa_max.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 This doesn't look like much, but it actually has important consequences. In fact, this moves the policy improvement off-policy, which means that it directly improves the policy with the optimal policy in mind.
 
