@@ -8,7 +8,7 @@ What is the mechanism that led your brain to understand that touching fire was n
 
 Reinforcement learning (or RL) is the part of artificial intelligence that attempts to answer just that: what makes an intelligent being learn from interaction?
 This is also known as the Reinforcement Learning Problem.  
-RL is part of machine learning, but it doesn't fall into either the category of supervised nor unsupervised learning. As of today, RL is the part of AI that is considered to come closer to achieving human-like intelligence.
+RL is part of machine learning, but it doesn't fall into either the category of supervised nor unsupervised learning. As of today, it is the part of AI that is considered to come closer to achieving human-like intelligence.
 
 ### MDPs
 A Markov Decision Process (MDP) is the formal framework used to address the Reinforcement Learning Problem. An MDP lays out a standardized way to formulate the problem, via an interaction between the agent (the intelligent being) and the environment in which the agent lives. In this interaction between agent and environment, the agent observes the state it is in, decides to take a certain action based on this state and then the environment responds with a new state and a reward, where the reward is a number defining how good that action was (a positive reward is good and a negative one is bad). This interaction can either have an end (in which case it is called an episodic task) or keep on going forever (in which case it is called a continuous task).
