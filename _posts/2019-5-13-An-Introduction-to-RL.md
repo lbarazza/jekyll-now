@@ -22,12 +22,12 @@ read more about it [here.](http://incompleteideas.net/rlai.cs.ualberta.ca/RLAI/r
 What exactly is reward?
 Above we defined the future reward as the sum of all the rewards that come next. This is called undiscounted future reward and in formula this would be:
 
-<img src="{{ site.baseurl }}/images/Intro-to-RL-images/undiscounted_future_reward.png" alt="Formula for undiscounted future reward" style="height: 30px;"/>
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/undicounted_future_reward.png" alt="Formula for undiscounted future reward" style="height: 30px;"/>
 
 This implementation works well as long as we are dealing with an episodic task. In fact, if the task was not episodic then it would go on forever and the future reward could potentially diverge to infinity as well, which would prevent us from being able to maximize it.
 In the cases where we are dealing with a continuous task, we then have to come up with something else. The solution is to just slightly change the above formula so that the more a reward is in the future, the more it gets "discounted", so that it will eventually converge to a finite value (this variation of the formula is called discounted future reward). We can achieve this by adding a constant gamma γ ∈ [0, 1] which we raise to the nth power where n represents the number of time steps in the future.
 
-<img src="{{ site.baseurl }}/images/Intro-to-RL-images/discounted_future_reward.png" alt="Formula for discounted future reward" style="height: 100px;"/>
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/dicounted_future_reward.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 In the case in which γ = 1, we get back the undiscounted formula.
 
