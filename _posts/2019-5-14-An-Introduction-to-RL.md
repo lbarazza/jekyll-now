@@ -12,7 +12,7 @@ RL is part of machine learning, but it doesn't fall into either the category of 
 
 ### MDPs
 A Markov Decision Process (MDP) is the formal framework used to address the Reinforcement Learning Problem. An MDP lays out a standardized way to formulate the problem, via an interaction between the agent (the intelligent being) and the environment in which the agent lives. In this interaction between agent and environment, the agent observes the state it is in, decides to take a certain action based on this state and then the environment responds with a new state and a reward, where the reward is a number defining how good that action was (a positive reward is good and a negative one is bad). This interaction can either have an end (in which case it is called an episodic task) or keep on going forever (in which case it is called a continuous task).
-For example, in a video game you could think of the reward as being the score after you take the action.
+For example, in a video game you could think of the reward as being the change in score after you take the action.
 In such a framework, it makes sense to assume that an agent's goal would be to maximize the future reward, that is the sum of all the rewards that will come next.
 
 The Reward Hypothesis is the hypothesis that every goal or purpose can be described as the maximization of a single scalar, the future reward. You can read more about it [here.](http://incompleteideas.net/rlai.cs.ualberta.ca/RLAI/rewardhypothesis.html)
