@@ -6,18 +6,16 @@ title: An Introduction to Reinforcement Learning
 Let's say that when you were a child you touched fire one time. After that, you realized it was probably a good a idea to not do it again and that's what you kept on doing ever after.
 What is the mechanism that led your brain to understand that touching fire was not the best thing you could do? How could we develop a system that develops this same ability of interacting with an environment and learning what is good and what is not?
 
-Reinforcement learning is the part of artificial intelligence that attempts to answer just that: what makes an intelligent being learn from interaction?
-This is also known as the Reinforcement Learning Problem.
-
-RL (Reinforcement learning) is part of machine learning, but it doesn't fall into either the category of supervised nor unsupervised learning. As of today, RL is the part of AI that is considered to come closer to achieving human-like intelligence.
+Reinforcement learning (or RL) is the part of artificial intelligence that attempts to answer just that: what makes an intelligent being learn from interaction?
+This is also known as the Reinforcement Learning Problem.  
+RL is part of machine learning, but it doesn't fall into either the category of supervised nor unsupervised learning. As of today, RL is the part of AI that is considered to come closer to achieving human-like intelligence.
 
 ### MDPs
 A Markov Decision Process (MDP) is the formal framework used to address the Reinforcement Learning Problem. An MDP lays out a standardized way to formulate the problem, via an interaction between the agent (the intelligent being) and the environment in which the agent lives. In this interaction between agent and environment, the agent observes the state it is in, decides to take a certain action based on this state and then the environment responds with a new state and a reward, where the reward is a number defining how good that action was (a positive reward is good and a negative one is bad). This interaction can either have an end (in which case it is called an episodic task) or keep on going forever (in which case it is called a continuous task).
 For example, in a video game you could think of the reward as being the score after you take the action.
 In such a framework, it makes sense to assume that an agent's goal would be to maximize the future reward, that is the sum of all the rewards that will come next.
 
-The Reward Hypothesis is the hypothesis that every goal or purpose can be described as the maximization of a single scalar, the future reward.
-You can read more about it [here.](http://incompleteideas.net/rlai.cs.ualberta.ca/RLAI/rewardhypothesis.html)
+The Reward Hypothesis is the hypothesis that every goal or purpose can be described as the maximization of a single scalar, the future reward. You can read more about it [here.](http://incompleteideas.net/rlai.cs.ualberta.ca/RLAI/rewardhypothesis.html)
 
 ##### What exactly is reward?
 Above we defined the future reward as the sum of all the rewards that come next. This is called undiscounted future reward and in formula this would be,
@@ -56,7 +54,7 @@ We will start off with an assumption that simplifies the problem and then we wil
 If we have this knowledge we can then find the optimal policy with a method called Dynamic Programming.
 This approach bases itself off the realization that, by solving the system of bellman equations for the value function at every state in the MDP, we end up with the optimal state-value function. When we have the optimal state-value function we can then easily derive the q-function (action-value function) with this formula,
 
-# add formula
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/from_v_to_q_one_step_dynamics.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 If we have complete knowledge of he MDP, we can always solve the system of linear equations, but this is usually practically inefficient as the number of states is often very large. To avoid this we can take a slightly different approach called iterative policy evaluation. This consists of initializing each state with a certain value and then looping through every state and assigning each one a new value that you get from the Bellman equation,
 
@@ -85,7 +83,7 @@ This also means that the latest episodes will have less and less weight as the n
 where, instead of simply averaging over all values, we take an exponential moving average, to give more weight to the latest episodes. Where α (alpha) ∈ (0, 1] is the learning rate of the function. The bigger α the faster the agent will learn, but if α is too big, then the agent would keep overshooting our approximation for the q values and the agent would never learn.
 
 ##### GLIE
-These two methods as they have been described above won't work. To understand why, I need to introduce the problem of exploration vs. exploitation. This simply says that if we always choose the action that maximizes the q-function we might get stuck in a sub-optimal policy. This is because the agent would never be willing to try new actions (exploitation) that on paper have worse value than the current "optimal", but that in reality might be better and might only be badly represented in the Q-table because they have been tested out poorly. On the other hand, if we allow our agent to choose randomly too much (exploration) to avoid the problem of being stuck in a sub-optimal policy, it would also never be able to perform well as, even though it knows what action would be best, it still will often perform another one because of it having to choose random actions to explore.
+Before in this section I lied to you, in fact these two methods as they have been described above won't work. To understand why, I need to introduce the problem of exploration vs. exploitation. This simply says that if we always choose the action that maximizes the q-function we might get stuck in a sub-optimal policy. This is because the agent would never be willing to try new actions (exploitation) that on paper have worse value than the current "optimal", but that in reality might be better and might only be badly represented in the Q-table because they have been tested out poorly. On the other hand, if we allow our agent to choose randomly too much (exploration) to avoid the problem of being stuck in a sub-optimal policy, it would also never be able to perform well as, even though it knows what action would be best, it still will often perform another one because of it having to choose random actions to explore.
 Finding a good balance between exploration and exploitation is still a hot topic of study, but for simplicity, it can be summarized with GLIE. GLIE stands for Greedy in the Limit with Infinite Exploration.
 If ε (epsilon) is the exploration rate (the probability that the agent takes a random action to explore), then GLIE says that ε should decrease with time, eventually converging to zero as the number of episodes goes towards infinity. This way the policy will always explore, but, in the limit, it will converge towards a greedy policy (a policy that only exploits).
 
