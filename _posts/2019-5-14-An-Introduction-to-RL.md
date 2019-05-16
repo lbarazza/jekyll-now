@@ -88,20 +88,20 @@ Finding a good balance between exploration and exploitation is still a hot topic
 If ε (epsilon) is the exploration rate (the probability that the agent takes a random action to explore), then GLIE says that ε should decrease with time, eventually converging to zero as the number of episodes goes towards infinity. This way the policy will always explore, but, in the limit, it will converge towards a greedy policy (a policy that only exploits).
 
 ##### Temporal Difference Methods
-The MC methods we discussed above have a few problems: they don't work for continuous tasks. This is because MC methods need to wait for the end of the episode to update the Q-table (which also makes them very inefficient).
+The MC methods we discussed above have a problem: they don't work for continuous tasks. This is because MC methods need to wait for the end of the episode to update the Q-table (which also makes them very inefficient).
 That's were Temporal Difference (or TD) methods come in. TD methods are able to update the Q-table at every time step in an episode. To do this they also make use of the Bellman equation, but, this time, making use of their current predictions for the Q-table to update itself.
 
 There is a variety of TD methods such as Sarsa, Expected Sarsa, and Sarsamax (or q-learning). The simplest, Sarsa, takes an action, observes the state and the reward, then it chooses a new action based on the new state. It then uses the observed reward and the current estimate in the Q-table for the new action-value pair to update the Q-table for the original action-value.
  
 <img src="{{ site.baseurl }}/images/Intro-to-RL-images/sarsa.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
-Expected Sarsa is an improvement of Sarsa which, instead of using the value of the action the policy would choose after observing the results of the first action, it makes a weighted average of all the action-values at that state, that is it calulates the expected future reward of taking action a at state s).
+Expected Sarsa is an improvement of Sarsa which, instead of using the value of the action the policy would choose after observing the results of the first action, it makes a weighted average of all the action-values at that state, that is it calulates the expected future reward of taking action a at state s').
 
-<img src="{{ site.baseurl }}/images/Intro-to-RL-images/expected_sarsa.png" alt="Formula for discounted future reward" style="height: 100px;"/>
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/sarsa_max.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 Q-learning (or Sarsamax) is another variation of Sarsa where the only difference is that we don't consider the action-value of the next action the policy would choose, but, instead, the action-value of the action that maximizes the future reward of the policy at that state. In other words, we are choosing our action-value based on a greedy policy.
 
-<img src="{{ site.baseurl }}/images/Intro-to-RL-images/sarsa_max.png" alt="Formula for discounted future reward" style="height: 100px;"/>
+<img src="{{ site.baseurl }}/images/Intro-to-RL-images/expected_sarsa.png" alt="Formula for discounted future reward" style="height: 100px;"/>
 
 This doesn't look like much, but it actually has important consequences. In fact, this moves the policy improvement off-policy, which means that it directly improves the policy with the optimal policy in mind.
 
